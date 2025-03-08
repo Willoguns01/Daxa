@@ -46,6 +46,10 @@ namespace daxa
         /// @return reference to info of object.
         [[nodiscard]] auto info() const -> InstanceInfo const &;
 
+#if defined(DAXA_BUILT_WITH_UTILS_EXTERNAL_ACCESS)
+        [[nodiscard]] auto get_vk_instance() const -> void*;
+#endif // DAXA_BUILT_WITH_UTILS_EXTERNAL_ACCESS
+
       protected:
         template <typename T, typename H_T>
         friend struct ManagedPtr;

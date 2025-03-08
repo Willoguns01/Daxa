@@ -510,6 +510,21 @@ daxa_dvc_info_tlas(daxa_Device device, daxa_TlasId acceleration_structure, daxa_
 DAXA_EXPORT DAXA_NO_DISCARD daxa_Result
 daxa_dvc_info_blas(daxa_Device device, daxa_BlasId acceleration_structure, daxa_BlasInfo * out_info);
 
+// external resource handling
+#if defined(DAXA_BUILT_WITH_UTILS_EXTERNAL_ACCESS)
+
+DAXA_EXPORT DAXA_NO_DISCARD daxa_Result
+daxa_dvc_create_image_external(daxa_Device device, daxa_ImageInfo const * info, void* vkImage, daxa_ImageId * out_id);
+DAXA_EXPORT DAXA_NO_DISCARD daxa_Result
+daxa_dvc_destroy_image_external(daxa_Device device, daxa_ImageId image);
+
+DAXA_EXPORT DAXA_NO_DISCARD daxa_Result
+daxa_dvc_get_vk_queue_family_index(daxa_Device device, daxa_QueueFamily family, daxa_u32 index, daxa_u32* outIndex);
+DAXA_EXPORT DAXA_NO_DISCARD daxa_Result
+daxa_dvc_get_vk_queue_index(daxa_Device device, daxa_QueueFamily family, daxa_u32 index, daxa_u32* outIndex);
+
+#endif // DAXA_BUILT_WITH_UTILS_EXTERNAL_ACCESS
+
 DAXA_EXPORT daxa_Bool8
 daxa_dvc_is_buffer_valid(daxa_Device device, daxa_BufferId buffer);
 DAXA_EXPORT daxa_Bool8

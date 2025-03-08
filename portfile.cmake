@@ -13,6 +13,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     utils-pipeline-manager-spirv-validation WITH_UTILS_PIPELINE_MANAGER_SPIRV_VALIDATION
     utils-task-graph WITH_UTILS_TASK_GRAPH
     utils-fsr2 WITH_UTILS_FSR2
+    utils-external-access WITH_UTILS_EXTERNAL_ACCESS
 )
 set(DAXA_DEFINES "-DDAXA_INSTALL=true")
 
@@ -36,6 +37,9 @@ if(WITH_UTILS_TASK_GRAPH)
 endif()
 if(WITH_UTILS_FSR2)
     list(APPEND DAXA_DEFINES "-DDAXA_ENABLE_UTILS_FSR2=true")
+endif()
+if(WITH_UTILS_EXTERNAL_ACCESS)
+    list(APPEND DAXA_DEFINES "-DDAXA_ENABLE_UTILS_EXTERNAL_ACCESS=true")
 endif()
 
 vcpkg_configure_cmake(

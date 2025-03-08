@@ -27,6 +27,9 @@ endif()
 if(DAXA_ENABLE_UTILS_PIPELINE_MANAGER_SPIRV_VALIDATION)
     list(APPEND VCPKG_MANIFEST_FEATURES "utils-pipeline-manager-spirv-validation")
 endif()
+if(DAXA_ENABLE_UTILS_EXTERNAL_ACCESS)
+    list(APPEND VCPKG_MANIFEST_FEATURES "utils-external-access")
+endif()
 if(DAXA_ENABLE_TESTS)
     list(APPEND VCPKG_MANIFEST_FEATURES "tests")
 endif()
@@ -196,6 +199,12 @@ if(DAXA_ENABLE_UTILS_TASK_GRAPH)
     target_compile_definitions(daxa
         PUBLIC
         DAXA_BUILT_WITH_UTILS_TASK_GRAPH=true
+    )
+endif()
+if(DAXA_ENABLE_UTILS_EXTERNAL_ACCESS)
+    target_compile_definitions(daxa
+        PUBLIC
+        DAXA_BUILT_WITH_UTILS_EXTERNAL_ACCESS=true
     )
 endif()
 

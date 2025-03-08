@@ -608,6 +608,17 @@ namespace daxa
         [[deprecated("Use tlas_device_address or device_address instead")]] [[nodiscard]] auto get_device_address(TlasId id) const { return tlas_device_address(id); }
 #endif
 
+#if defined(DAXA_BUILT_WITH_UTILS_EXTERNAL_ACCESS)
+        [[nodiscard]] auto create_image_extern(ImageInfo const & info, void* vkImage) -> ImageId;
+        void destroy_image_extern(ImageId id);
+
+        [[nodiscard]] auto get_vk_device() const -> void*;
+        [[nodiscard]] auto get_vk_physical_device() const -> void*;
+
+        [[nodiscard]] auto get_vk_queue_family_index(Queue queue) const -> u32;
+        [[nodiscard]] auto get_vk_queue_index(Queue queue) const -> u32;
+#endif // DAXA_BUILT_WITH_UTILS_EXTERNAL_ACCESS
+
       protected:
         template <typename T, typename H_T>
         friend struct ManagedPtr;

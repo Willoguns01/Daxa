@@ -175,6 +175,15 @@ struct daxa_ImplDevice final : public ImplHandle
     void zombify_tlas(TlasId id);
     void zombify_blas(BlasId id);
 
+#if defined(DAXA_BUILT_WITH_UTILS_EXTERNAL_ACCESS)
+
+    std::deque<std::pair<u64, ImageId>> external_image_zombies = {};
+
+    void cleanup_image_external(ImageId id);
+    void zombify_image_external(ImageId id);
+
+#endif // DAXA_BUILT_WITH_UTILS_EXTERNAL_ACCESS
+
     static auto create_2(daxa_Instance instance, daxa_DeviceInfo2 const & info, ImplPhysicalDevice const & physical_device, daxa_DeviceProperties const & properties, daxa_Device device) -> daxa_Result;
     static auto create(daxa_Instance instance, daxa_DeviceInfo const & info, VkPhysicalDevice physical_device, daxa_Device device) -> daxa_Result;
     static void zero_ref_callback(ImplHandle const * handle);

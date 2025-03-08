@@ -227,6 +227,15 @@ namespace daxa
         return *r_cast<InstanceInfo const *>(daxa_instance_info(rc_cast<daxa_Instance>(this->object)));
     }
 
+#if defined(DAXA_BUILT_WITH_UTILS_EXTERNAL_ACCESS)
+
+    auto Instance::get_vk_instance() const -> void*
+    {
+        return static_cast<void*>(daxa_instance_get_vk_instance(this->object));
+    }
+
+#endif // DAXA_BUILT_WITH_UTILS_EXTERNAL_ACCESS
+
     auto Instance::inc_refcnt(ImplHandle const * object) -> u64
     {
         _DAXA_TEST_PRINT("instance inc refcnt\n");
@@ -390,6 +399,72 @@ namespace daxa
     DAXA_DECL_GPU_RES_FN(Sampler, sampler)
     DAXA_DECL_GPU_RES_FN(Tlas, tlas)
     DAXA_DECL_GPU_RES_FN(Blas, blas)
+
+    // external access handling
+#if defined(DAXA_BUILT_WITH_UTILS_EXTERNAL_ACCESS)
+
+    auto Device::create_image_extern(ImageInfo const & info, void* vkImage) -> ImageId
+    {
+        ImageId id = {};
+        check_result(
+            daxa_dvc_create_image_external(
+                r_cast<daxa_Device>(this->object),
+                r_cast<daxa_ImageInfo const *>(&info),
+                vkImage,
+                r_cast<daxa_ImageId *>(&id)),
+            "failed to create image from external resource");
+        return id;
+    }
+
+    void Device::destroy_image_extern(ImageId id)
+    {
+        auto result = daxa_dvc_destroy_image_external(
+            r_cast<daxa_Device>(this->object),
+            static_cast<daxa_ImageId>(id));
+        check_result(result, "invalid resource id");
+    }
+
+    auto Device::get_vk_device() const -> void*
+    {
+        return static_cast<void*>(daxa_dvc_get_vk_device(this->object));
+    }
+
+    auto Device::get_vk_physical_device() const -> void*
+    {
+        return static_cast<void*>(daxa_dvc_get_vk_physical_device(this->object));
+    }
+
+    auto Device::get_vk_queue_family_index(Queue queue) const -> u32
+    {
+        QueueFamily family = queue.family;
+        u32 index = queue.index;
+
+        u32 out = 0;
+        auto result = daxa_dvc_get_vk_queue_family_index(
+            r_cast<daxa_Device>(this->object),
+            static_cast<daxa_QueueFamily>(family),
+            r_cast<daxa_u32>(&index),
+            r_cast<daxa_u32*>(&out));
+        check_result(result, "failure getting queue family index");
+        return out;
+    }
+
+    auto Device::get_vk_queue_index(Queue queue) const -> u32
+    {
+        QueueFamily family = queue.family;
+        u32 index = queue.index;
+
+        u32 out = 0;
+        auto result = daxa_dvc_get_vk_queue_index(
+            r_cast<daxa_Device>(this->object),
+            static_cast<daxa_QueueFamily>(family),
+            r_cast<daxa_u32>(&index),
+            r_cast<daxa_u32*>(&out));
+        check_result(result, "failure getting queue index");
+        return out;
+    }
+
+#endif // DAXA_BUILT_WITH_UTILS_EXTERNAL_ACCESS
 
     auto Device::buffer_device_address(BufferId id) const -> Optional<DeviceAddress>
     {
