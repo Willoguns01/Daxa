@@ -443,7 +443,7 @@ namespace daxa
         auto result = daxa_dvc_get_vk_queue_family_index(
             r_cast<daxa_Device>(this->object),
             static_cast<daxa_QueueFamily>(family),
-            r_cast<daxa_u32>(&index),
+            index,
             r_cast<daxa_u32*>(&out));
         check_result(result, "failure getting queue family index");
         return out;
@@ -458,7 +458,7 @@ namespace daxa
         auto result = daxa_dvc_get_vk_queue_index(
             r_cast<daxa_Device>(this->object),
             static_cast<daxa_QueueFamily>(family),
-            r_cast<daxa_u32>(&index),
+            index,
             r_cast<daxa_u32*>(&out));
         check_result(result, "failure getting queue index");
         return out;
