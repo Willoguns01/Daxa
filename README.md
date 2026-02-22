@@ -13,6 +13,8 @@ OpenXR also requires that you ensure the vk instance and device enable a couple 
 I have no idea if anybody else needs Daxa for this, but if you do then let me know and I can work on keeping this branch up-to-date with the main Daxa repository.
 If you need to contact me on Discord, you can find me on the Daxa or Graphics Programming discords.
 
+A great deal of code has been repeated for simplicity's sake. This could be improved, though would likely make it more difficult to update to future daxa changes.
+
 # Why Daxa?
 ✅ Strong modern GPU focus - no legacy hardware compromises  
 🚀 Bindless by default – no descriptor management nor bindings  
