@@ -563,6 +563,8 @@ daxa_dvc_create_buffer(daxa_Device device, daxa_BufferInfo const * info, daxa_Bu
 DAXA_EXPORT DAXA_NO_DISCARD daxa_Result
 daxa_dvc_create_image(daxa_Device device, daxa_ImageInfo const * info, daxa_ImageId * out_id);
 DAXA_EXPORT DAXA_NO_DISCARD daxa_Result
+daxa_dvc_create_image_external(daxa_Device device, void* vkHandle, daxa_ImageInfo const * info, daxa_ImageId * out_id);
+DAXA_EXPORT DAXA_NO_DISCARD daxa_Result
 daxa_dvc_create_buffer_from_memory_block(daxa_Device device, daxa_MemoryBlockBufferInfo const * info, daxa_BufferId * out_id);
 DAXA_EXPORT DAXA_NO_DISCARD daxa_Result
 daxa_dvc_create_tlas_from_memory_block(daxa_Device device, daxa_MemoryBlockTlasInfo const * info, daxa_TlasId * out_id);
@@ -598,6 +600,8 @@ DAXA_EXPORT DAXA_NO_DISCARD daxa_Result
 daxa_dvc_destroy_buffer(daxa_Device device, daxa_BufferId buffer);
 DAXA_EXPORT DAXA_NO_DISCARD daxa_Result
 daxa_dvc_destroy_image(daxa_Device device, daxa_ImageId image);
+DAXA_EXPORT DAXA_NO_DISCARD daxa_Result
+daxa_dvc_destroy_image_external(daxa_Device device, daxa_ImageId image);
 DAXA_EXPORT DAXA_NO_DISCARD daxa_Result
 daxa_dvc_destroy_image_view(daxa_Device device, daxa_ImageViewId image_view);
 DAXA_EXPORT DAXA_NO_DISCARD daxa_Result

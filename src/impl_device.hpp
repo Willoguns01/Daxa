@@ -101,6 +101,7 @@ struct daxa_ImplDevice final : public ImplHandle
     std::deque<std::pair<u64, ImplTransientCommandArena*>> command_zombies = {};
     std::deque<std::pair<u64, BufferId>> buffer_zombies = {};
     std::deque<std::pair<u64, ImageId>> image_zombies = {};
+    std::deque<std::pair<u64, ImageId>> external_image_zombies = {};
     std::deque<std::pair<u64, ImageViewId>> image_view_zombies = {};
     std::deque<std::pair<u64, SamplerId>> sampler_zombies = {};
     std::deque<std::pair<u64, TlasId>> tlas_zombies = {};
@@ -172,6 +173,7 @@ struct daxa_ImplDevice final : public ImplHandle
 
     void cleanup_buffer(BufferId id);
     void cleanup_image(ImageId id);
+    void cleanup_image_external(ImageId id);
     void cleanup_image_view(ImageViewId id);
     void cleanup_sampler(SamplerId id);
     void cleanup_tlas(TlasId id);
@@ -179,6 +181,7 @@ struct daxa_ImplDevice final : public ImplHandle
 
     void zombify_buffer(BufferId id);
     void zombify_image(ImageId id);
+    void zombify_image_external(ImageId id);
     void zombify_image_view(ImageViewId id);
     void zombify_sampler(SamplerId id);
     void zombify_tlas(TlasId id);

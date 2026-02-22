@@ -369,6 +369,26 @@ namespace daxa
         return {};                                                    \
     }
 
+    auto Device::create_image_external(void* vkHandle, ImageInfo const & info) -> ImageId
+    {
+        ImageId id = {};
+        check_result(daxa_dvc_create_image_external(
+            r_cast<daxa_Device>(this->object),
+            r_cast<VkImage>(vkHandle),
+            r_cast<daxa_ImageInfo const *>(&info),
+            r_cast<daxa_ImageId *>(&id)),
+        "failed to create image from external handle");
+        return id;
+    }
+
+    void Device::destroy_image_external(ImageId id)
+    {
+        auto result = daxa_dvc_destroy_image_external(
+            r_cast<daxa_Device>(this->object),
+            static_cast<daxa_ImageId>(id));
+        check_result(result, "invalid resource id");
+    }
+
     auto Device::create_buffer_from_memory_block(MemoryBlockBufferInfo const & info) -> BufferId
     {
         BufferId id = {};

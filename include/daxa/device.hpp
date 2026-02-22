@@ -563,6 +563,7 @@ namespace daxa
 
         [[nodiscard]] auto create_buffer(BufferInfo const & info) -> BufferId;
         [[nodiscard]] auto create_image(ImageInfo const & info) -> ImageId;
+        [[nodiscard]] auto create_image_external(void* vkHandle, ImageInfo const & info) -> ImageId;
         [[nodiscard]] auto create_buffer_from_memory_block(MemoryBlockBufferInfo const & info) -> BufferId;
         [[nodiscard]] auto create_tlas_from_memory_block(MemoryBlockTlasInfo const & info) -> TlasId;
         [[nodiscard]] auto create_image_from_memory_block(MemoryBlockImageInfo const & info) -> ImageId;
@@ -598,6 +599,7 @@ namespace daxa
 
         void destroy_buffer(BufferId buffer);
         void destroy_image(ImageId image);
+        void destroy_image_external(ImageId image);
         void destroy_image_view(ImageViewId image_view);
         void destroy_sampler(SamplerId sampler);
         void destroy_tlas(TlasId tlas);
