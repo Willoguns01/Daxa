@@ -4,6 +4,14 @@
   <!-- </a> -->
 </p>
 
+# What is this fork?
+
+I needed Daxa to support OpenXR. Almost everything is already there, including access for getting the Vulkan handles for things like the instance, physical device, queue index, etc.
+Though for OpenXR image presentation, you need to use a VkImage provided by OpenXR. This branch just adds an extra function to the daxa::Device for creating an image from that external handle.
+
+I have no idea if anybody else needs Daxa for this, but if you do then let me know and I can work on keeping this branch up-to-date with the main Daxa repository.
+If you need to contact me on Discord, you can find me on the Daxa or Graphics Programming discords.
+
 # Why Daxa?
 ✅ Strong modern GPU focus - no legacy hardware compromises  
 🚀 Bindless by default – no descriptor management nor bindings  
