@@ -179,11 +179,13 @@ namespace daxa
 {
     /// --- Begin Instance ---
 
-    auto create_instance(InstanceInfo const & info) -> Instance
+    auto create_instance(InstanceInfo const & info, std::vector<std::string> user_instance_extensions, std::vector<std::string> user_device_extensions) -> Instance
     {
         Instance ret = {};
         check_result(daxa_create_instance(
                          r_cast<daxa_InstanceInfo const *>(&info),
+                         user_instance_extensions,
+                         user_device_extensions,
                          r_cast<daxa_Instance *>(&ret)),
                      "failed to create instance");
         return ret;

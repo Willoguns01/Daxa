@@ -961,10 +961,10 @@ auto daxa_dvc_create_image_external(daxa_Device self, void* vkHandle, daxa_Image
     
             if (ret.view_slot.vk_image_view)
             {
-                vkDestroyImageView(self->vk_device, ret.view_slot.vk_imageg_view, nullptr);
+                vkDestroyImageView(self->vk_device, ret.view_slot.vk_image_view, nullptr);
             }
         }
-    }
+    };
 
     VkImageViewType vk_image_view_type = {};
     if (info->array_layer_count > 1)
@@ -992,7 +992,7 @@ auto daxa_dvc_create_image_external(daxa_Device self, void* vkHandle, daxa_Image
 
     ret.aspect_flags = infer_aspect_from_format(info->format);
     VkImageViewCreateInfo vk_image_view_create_info{
-        .sType = VK_STRUCTURE_TYPE_IMAGEG_VIEW_CREATE_INFO,
+        .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
         .pNext = nullptr,
         .flags = {},
         .image = {},
@@ -1395,7 +1395,7 @@ auto daxa_dvc_destroy_image_external(daxa_Device self, daxa_ImageId id) -> daxa_
         }
         return DAXA_RESULT_SUCCESS;
     }
-    daxa_Result result = DAXA_RESULT_INVALID_IMAGEE_ID;
+    daxa_Result result = DAXA_RESULT_INVALID_IMAGE_ID;
     _DAXA_RETURN_IF_ERROR(result, result);
     return result;
 }
@@ -1859,7 +1859,7 @@ auto daxa_dvc_collect_garbage(daxa_Device self) -> daxa_Result
             self->cleanup_image(id);
         });
     check_and_cleanup_gpu_resources(
-        self->external_imageg_zombies,
+        self->external_image_zombies,
         [&](auto id)
         {
             self->cleanup_image_external(id);
@@ -1944,7 +1944,7 @@ auto daxa_dvc_dec_refcnt(daxa_Device self) -> u64
 
 // --- Begin Internal Functions ---
 
-auto daxa_ImplDevice::create_2(daxa_Instance instance, daxa_DeviceInfo2 const & info, ImplPhysicalDevice const & physical_device, daxa_DeviceProperties const & properties, daxa_Device out_device) -> daxa_Result
+auto daxa_ImplDevice::create_2(daxa_Instance instance, daxa_DeviceInfo2 const & info, std::vector<std::string> user_device_extensions, ImplPhysicalDevice const & physical_device, daxa_DeviceProperties const & properties, daxa_Device out_device) -> daxa_Result
 {
     using namespace daxa;
     daxa_Result result = {};
@@ -2060,6 +2060,32 @@ auto daxa_ImplDevice::create_2(daxa_Instance instance, daxa_DeviceInfo2 const & 
     enabled_features.initialize(physical_device.extensions);
     fill_create_features(enabled_features, properties.implicit_features, info.explicit_features);
 
+    // handle user-provided extensions
+    std::vector<const char*> enabledExtensions;
+
+    for (const auto * ext : physical_device.extensions.extension_name_list)
+    {
+        enabledExtensions.push_back(ext);
+    }
+
+    for (const auto& user_ext : user_device_extensions)
+    {
+        bool found = false;
+        for (const auto * ext : physical_device.extensions.extension_name_list)
+        {
+            if (std::strcmp(user_ext.c_str(), ext) == 0)
+            {
+                found = true;
+                break;
+            }
+        }
+        if (!found)
+        {
+            enabledExtensions.push_back(user_ext.c_str());
+        }
+    }
+    //
+
     VkDeviceCreateInfo const device_ci = {
         .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
         .pNext = r_cast<void const *>(&enabled_features.physical_device_features_2),
@@ -2068,8 +2094,8 @@ auto daxa_ImplDevice::create_2(daxa_Instance instance, daxa_DeviceInfo2 const & 
         .pQueueCreateInfos = queues_ci.data(),
         .enabledLayerCount = 0,
         .ppEnabledLayerNames = nullptr,
-        .enabledExtensionCount = physical_device.extensions.extension_name_list_size,
-        .ppEnabledExtensionNames = physical_device.extensions.extension_name_list,
+        .enabledExtensionCount = static_cast<u32>(enabledExtensions.size()),
+        .ppEnabledExtensionNames = enabledExtensions.data(),
         .pEnabledFeatures = nullptr,
     };
     result = static_cast<daxa_Result>(vkCreateDevice(self->vk_physical_device, &device_ci, nullptr, &self->vk_device));
@@ -2795,13 +2821,13 @@ void daxa_ImplDevice::cleanup_image(ImageId id)
 void daxa_ImplDevice::cleanup_image_external(ImageId id)
 {
     auto gid = std::bit_cast<GPUResourceId>(id);
-    ImplImageSlot const & imageg_slot = gpu_sro_table.image_slots.unsafe_get(gid);
+    ImplImageSlot const & image_slot = gpu_sro_table.image_slots.unsafe_get(gid);
     {
-        write_descriptor_set_imageg(
+        write_descriptor_set_image(
             this->vk_device,
             this->gpu_sro_table.vk_descriptor_set,
             this->vk_null_image_view,
-            std::bit_cast<ImageUsageFlags>(image_slots.info.usage),
+            std::bit_cast<ImageUsageFlags>(image_slot.info.usage),
             gid.index);
     }
     vkDestroyImageView(vk_device, image_slot.view_slot.vk_image_view, nullptr);

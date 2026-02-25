@@ -3,6 +3,8 @@
 
 #include <daxa/c/device.h>
 
+#include <vector>
+
 typedef daxa_Flags daxa_InstanceFlags;
 static const daxa_InstanceFlags DAXA_INSTANCE_FLAG_DEBUG_UTIL = 0x1;
 static const daxa_InstanceFlags DAXA_INSTANCE_FLAG_PARENT_MUST_OUTLIVE_CHILD = 0x2;
@@ -21,7 +23,7 @@ static const daxa_InstanceInfo DAXA_DEFAULT_INSTANCE_INFO = {
 };
 
 DAXA_EXPORT DAXA_NO_DISCARD daxa_Result
-daxa_create_instance(daxa_InstanceInfo const * info, daxa_Instance * out_instance);
+daxa_create_instance(daxa_InstanceInfo const * info, std::vector<std::string> user_extensions, std::vector<std::string> user_device_extensions, daxa_Instance * out_instance);
 
 DAXA_EXPORT DAXA_NO_DISCARD daxa_Result
 daxa_instance_create_device_2(daxa_Instance instance, daxa_DeviceInfo2 const * info, daxa_Device * out_device);

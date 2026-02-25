@@ -50,5 +50,5 @@ namespace daxa
         static auto dec_refcnt(ImplHandle const * object) -> u64;
     };
 
-    [[nodiscard]] DAXA_EXPORT_CXX auto create_instance(InstanceInfo const & info) -> Instance;
+    [[nodiscard]] DAXA_EXPORT_CXX auto create_instance(InstanceInfo const & info, std::vector<std::string> user_instance_extensions, std::vector<std::string> user_device_extensions) -> Instance;
 } // namespace daxa

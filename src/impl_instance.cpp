@@ -9,7 +9,7 @@
 
 // --- Begin API Functions ---
 
-auto daxa_create_instance(daxa_InstanceInfo const * info, daxa_Instance * out_instance) -> daxa_Result
+auto daxa_create_instance(daxa_InstanceInfo const * info, std::vector<std::string> user_instance_extensions, std::vector<std::string> user_device_extensions, daxa_Instance * out_instance) -> daxa_Result
 {
     auto ret = daxa_ImplInstance{};
     ret.info = *reinterpret_cast<InstanceInfo const *>(info);
@@ -77,6 +77,27 @@ auto daxa_create_instance(daxa_InstanceInfo const * info, daxa_Instance * out_in
             enabled_extensions.push_back(ext);
         }
     }
+
+    for (auto const& user_ext : user_instance_extensions)
+    {
+        bool found = false;
+        for (auto & ext : enabled_extensions)
+        {
+            if (std::strcmp(user_ext.c_str(), ext) == 0)
+            {
+                found = true;
+                break;
+            }
+        }
+        if (!found)
+        {
+            enabled_extensions.push_back(user_ext.c_str());
+        }
+    }
+
+    ret.user_instance_extensions = user_instance_extensions;
+    ret.user_device_extensions = user_device_extensions;
+
     VkApplicationInfo const app_info = {
         .sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
         .pNext = nullptr,
@@ -216,6 +237,7 @@ auto daxa_instance_create_device_2(daxa_Instance self, daxa_DeviceInfo2 const * 
     result = daxa_ImplDevice::create_2(
         self,
         *info,
+        self->user_device_extensions,
         self->device_internals[device_i],
         self->device_properties[device_i],
         *out_device);
